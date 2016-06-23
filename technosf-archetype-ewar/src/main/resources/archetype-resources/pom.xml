@@ -1,14 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>${groupId}</groupId>
+  <artifactId>${artifactId}</artifactId>
+  <version>${version}</version>
+  <packaging>jar</packaging>
 
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>$com.github.technosf.archetypes</groupId>
-	<artifactId>$technosf-archetype-ewar</artifactId>
-	<version>$0.0.1-SNAPSHOT</version>
+  <name>${artifactId}</name>
+  <url>http://github.com/technosf/technosf-archetype-ewar</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<main.class>War-Runner</main.class>
+		<main.class>WarRunner</main.class>
 		<jetty.version>9.2.17.v20160517 </jetty.version>
 		<jquery.version>2.2.1</jquery.version>
 		<jquery-cookie.version>1.4.1-1</jquery-cookie.version>

@@ -1,6 +1,21 @@
 #set($symbol_pound='#')
 #set($symbol_dollar='$')
 #set($symbol_escape='\')
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 import java.security.ProtectionDomain;
 
@@ -15,21 +30,21 @@ import org.eclipse.jetty.webapp.WebAppContext;
  * @since 0.0.1
  * @version 0.0.1
  */
-public class War-Runner
+public class WarRunner
 {
 
     private final static int CONST_MIN_PORT = 8000;
     private final static String CONST_PORT =
-            "${symbol_escape}nThe port number provided is invalid for SamlOperator";
+            "${symbol_escape}nThe port number provided is invalid for WarRunner";
     private final static String CONST_ARGS =
-            "${symbol_escape}nSamlOperator requires a port to run on, where the port number is > "
+            "${symbol_escape}nWarRunner requires a port to run on, where the port number is > "
                     + CONST_MIN_PORT + "${symbol_escape}n";
     private final static String CONST_RUNNING =
             "${symbol_escape}nRunning .war at location: [%1${symbol_dollar}s]${symbol_escape}n";
 
 
     /**
-     * Entry point to spin up the SamlOperator web archive in the packaged Jetty
+     * Entry point to spin up the web archive in the packaged Jetty
      * server
      * 
      * @param args
@@ -81,7 +96,7 @@ public class War-Runner
          * ------------------------------------------------------------
          */
 
-        ProtectionDomain domain = War-Runner.class.getProtectionDomain();
+        ProtectionDomain domain = WarRunner.class.getProtectionDomain();
 
         String location = domain.getCodeSource().getLocation().toExternalForm();
 
@@ -98,7 +113,7 @@ public class War-Runner
 
         System.out
                 .println(
-                        "${symbol_escape}nSamlOperator  --  Ready...${symbol_escape}n");
+                        "${symbol_escape}nWarRunner  --  Ready...${symbol_escape}n");
 
         server.join();
     }
