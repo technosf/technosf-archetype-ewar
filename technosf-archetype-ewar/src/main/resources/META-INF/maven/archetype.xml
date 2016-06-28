@@ -1,6 +1,0 @@
-<archetype>
-	<id>technosf-archetype-ewar</id>
-	<sources>
-		<source>src/main/java/WarRunner.java</source>
-	</sources>
-</archetype>

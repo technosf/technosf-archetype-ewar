@@ -1,0 +1,1 @@
+mvn -Dorg.slf4j.simpleLogger.defaultLogLevel=debug jetty:run
