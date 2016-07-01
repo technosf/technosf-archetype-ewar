@@ -1,3 +1,6 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -14,8 +17,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<main.class>WarRunner</main.class>
-		<jetty.version>9.2.17.v20160517 </jetty.version>
-		<jquery.version>2.2.1</jquery.version>
+		<jetty.version>9.3.10.v20160621</jetty.version>
+		<tomcat.version>8.5.3</tomcat.version>
+		<jquery.version>2.2.4</jquery.version>
 		<jquery-cookie.version>1.4.1-1</jquery-cookie.version>
 		<jquery-tmpl.version>beta1.0.0</jquery-tmpl.version>
 	</properties>
@@ -35,10 +39,65 @@
 				</configuration>
 			</plugin>
 
-			<!-- Move Jetty deps up to the top of the .war for Main to find -->
+			<!-- Create the named .war file with a main class in the manifest -->
+
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<warName>${symbol_dollar}{project.artifactId}-${symbol_dollar}{project.version}</warName>
+					<archive>
+						<manifest>
+							<mainClass>${main.class}.class</mainClass>
+						</manifest>
+					</archive>
+					<webResources>
+						<!-- Replace tokens in the .js with properties defined in the .pom 
+							The .pom properties should match the values in Constants.java to ensure that 
+							the servlets and .js are in agreement -->
+						<resource>
+							<filtering>true</filtering>
+							<directory>src/main/webapp</directory>
+							<includes>
+								<include>**/*.js</include>
+								<include>**/*.jsp</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+
+			<!-- Move main WebApp class to the top of the .war to make it executable -->
+
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>main-class-placement</id>
+						<phase>prepare-package</phase>
+						<configuration>
+							<target>
+								<move
+									todir="${symbol_dollar}{project.build.directory}/${symbol_dollar}{project.artifactId}-${symbol_dollar}{project.version}/">
+									<fileset dir="${symbol_dollar}{project.build.directory}/classes/">
+										<include name="${symbol_dollar}{main.class}.class" />
+									</fileset>
+								</move>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Move Jetty WebApp deps up to the top of the .war for the main class to find -->
 
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
 				<executions>
 					<execution>
 						<id>jetty-classpath</id>
@@ -47,23 +106,24 @@
 							<goal>unpack-dependencies</goal>
 						</goals>
 						<configuration>
-							<includeGroupIds>org.eclipse.jetty,javax.servlet</includeGroupIds>
+							<includeGroupIds>org.eclipse.jetty,javax.servlet,org.apache.tomcat</includeGroupIds>
 							<excludeArtifactIds>jsp-api,jstl</excludeArtifactIds>
-							<excludes>META-INF/ECLIPSEF.*</excludes>
+							<excludes>META-INF/ECLIPSEF.*,*.html,*.txt,*.css</excludes>
 							<outputDirectory>
-								${project.build.directory}/${project.artifactId}-${project.version}
+								${symbol_dollar}{project.build.directory}/${symbol_dollar}{project.artifactId}-${symbol_dollar}{project.version}
 							</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 
-			<!-- Plug-ins for interactive Jetty using "mvn jetty:run" -->
+			<!-- Plug-ins for interactive Jetty using "mvn jetty:run-exploded", "mvn jetty:run-war" 
+				(which will filter .jsp files)  or "mvn jetty:run" (which will not filter .jsp files)  -->
 
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty.version}</version>
+				<version>${symbol_dollar}{jetty.version}</version>
 				<configuration>
 					<scanIntervalSeconds>10</scanIntervalSeconds>
 					<webApp>
@@ -74,92 +134,89 @@
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-jspc-maven-plugin</artifactId>
-				<version>${jetty.version}</version>
+				<version>${symbol_dollar}{jetty.version}</version>
 			</plugin>
+
+
 		</plugins>
 	</build>
 
 	<dependencies>
 
-		<!-- == Executable .war dependencies == -->
+		<!-- == Executable .war dependencies (provided) == -->
 
 		<!-- WebApp Server -->
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
-			<version>${jetty.version}</version>
+			<version>${symbol_dollar}{jetty.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-jsp</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>tomcat</groupId>
-			<artifactId>jasper-compiler</artifactId>
-			<version>5.5.23</version>
+			<artifactId>apache-jsp</artifactId>
+			<version>${symbol_dollar}{jetty.version}</version>
 			<scope>provided</scope>
-			</dependency>
-
-		<!-- Servlet -->
-
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>taglibs</groupId>
-			<artifactId>standard</artifactId>
-			<version>1.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp.jstl</groupId>
-			<artifactId>javax.servlet.jsp.jstl-api</artifactId>
-			<version>1.2.1</version>
 		</dependency>
 
-		<!-- jquery -->
+		<!-- JSP Compilation -->
 
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<version>${symbol_dollar}{tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-juli</artifactId>
+			<version>${symbol_dollar}{tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+
+		<!-- == Deployment dependencies == -->
+		
+		<!-- Tag and JavaScript libraries -->
+
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>apache-jstl</artifactId>
+			<version>${symbol_dollar}{jetty.version}</version>			
+			<scope>runtime</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
-			<version>${jquery.version}</version>
+			<version>${symbol_dollar}{jquery.version}</version>			
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery-cookie</artifactId>
-			<version>${jquery-cookie.version}</version>
+			<version>${symbol_dollar}{jquery-cookie.version}</version>			
+			<scope>runtime</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.webjars</groupId>
 					<artifactId>jquery</artifactId>
-					<!-- Dep with org.webjars:jquery:jar:2.1.3:compile -->
+					<!-- Dep with org.webjars:jquery:jar::compile -->
 				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery-tmpl</artifactId>
-			<version>${jquery-tmpl.version}</version>
+			<version>${symbol_dollar}{jquery-tmpl.version}</version>			
+			<scope>runtime</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.webjars</groupId>
 					<artifactId>jquery</artifactId>
-					<!-- Dep with org.webjars:jquery:jar:2.1.3:compile -->
+					<!-- Dep with org.webjars:jquery:jar::compile -->
 				</exclusion>
 			</exclusions>
 		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.21</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
-
 </project>

@@ -27,15 +27,15 @@ import java.util.Date;
  * @since 0.0.1
  * @version 0.0.1
  */
-public class WorldSayHello
+public class MyApp
 {
     /**
      * Whats the date?
      * 
      * @return the date
      */
-    public Date getHelloDate()
+    public String getHelloDate()
     {
-        return new Date();
+        return new Date().toString();
     }
 }
