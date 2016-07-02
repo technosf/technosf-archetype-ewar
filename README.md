@@ -28,7 +28,7 @@ An **executable .war** file is a _.war_ file which has had an _embedded web appl
 
 Download the _archetype_ for the version of Jetty you wish to use. Generate a project with the command:
 	
-	mvn install:install-file technosf-archetype-ewar-8.5.3.jar
+	mvn install:install-file technosf-archetype-ewar-9.3_8.5.jar
 
 
 ## Components ##
