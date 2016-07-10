@@ -103,18 +103,21 @@ public class WarRunner
         System.out.println(String.format(CONST_RUNNING,
                 location));
 
-        WebAppContext webapp = new WebAppContext();
-        webapp.setContextPath("/");
-        webapp.setWar(location);
+		System.setProperty("org.apache.jasper.compiler.disablejsr199", "true");
+		WebAppContext webapp = new WebAppContext();
+		webapp.setContextPath("/");
+		webapp.setWar(location);
+		webapp.setParentLoaderPriority(true);
 
-        Server server = new Server(port);
-        server.setHandler(webapp);
-        server.start();
+		Server server = new Server(port);
+		server.setHandler(webapp);
 
-        System.out
-                .println(
-                        "${symbol_escape}nWarRunner  --  Ready...${symbol_escape}n");
+		System.out.println("Starting server");
+		server.start();
 
-        server.join();
+		System.out.println("Joining server");
+
+		server.join();
+		System.out.println("Finished starting Jetty...");
     }
 }

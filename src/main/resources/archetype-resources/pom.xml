@@ -1,6 +1,8 @@
+
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
-#set( $symbol_escape = '\' )
+#set(
+$symbol_escape = '\' )
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -13,12 +15,13 @@
 
 	<name>${artifactId}</name>
 	<url>http://github.com/technosf/technosf-archetype-ewar</url>
+	<description>Build off this sample executable web archive project </description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<main.class>WarRunner</main.class>
-		<jetty.version>9.3.10.v20160621</jetty.version>
-		<tomcat.version>8.5.3</tomcat.version>
+		<jetty.version>9.2.17.v20160517</jetty.version>
+		<tomcat.version>6.0.45</tomcat.version>
 		<jquery.version>2.2.4</jquery.version>
 		<jquery-cookie.version>1.4.1-1</jquery-cookie.version>
 		<jquery-tmpl.version>beta1.0.0</jquery-tmpl.version>
@@ -48,7 +51,7 @@
 					<warName>${symbol_dollar}{project.artifactId}-${symbol_dollar}{project.version}</warName>
 					<archive>
 						<manifest>
-							<mainClass>${main.class}.class</mainClass>
+							<mainClass>${main.class}</mainClass>
 						</manifest>
 					</archive>
 					<webResources>
@@ -93,7 +96,8 @@
 				</executions>
 			</plugin>
 
-			<!-- Move Jetty WebApp deps up to the top of the .war for the main class to find -->
+			<!-- Move Jetty WebApp deps up to the top of the .war for the main class 
+				to find -->
 
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -117,8 +121,9 @@
 				</executions>
 			</plugin>
 
-			<!-- Plug-ins for interactive Jetty using "mvn jetty:run-exploded", "mvn jetty:run-war" 
-				(which will filter .jsp files)  or "mvn jetty:run" (which will not filter .jsp files)  -->
+			<!-- Plug-ins for interactive Jetty using "mvn jetty:run-exploded", "mvn 
+				jetty:run-war" (which will filter .jsp files) or "mvn jetty:run" (which will 
+				not filter .jsp files) -->
 
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
@@ -155,47 +160,42 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>apache-jsp</artifactId>
+			<artifactId>jetty-jsp</artifactId>
 			<version>${symbol_dollar}{jetty.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<!-- JSP Compilation -->
 
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-			<version>${symbol_dollar}{tomcat.version}</version>
-			<scope>provided</scope>
-		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/jasper -->
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-juli</artifactId>
+			<artifactId>jasper</artifactId>
 			<version>${symbol_dollar}{tomcat.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 
 		<!-- == Deployment dependencies == -->
-		
+
 		<!-- Tag and JavaScript libraries -->
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>apache-jstl</artifactId>
-			<version>${symbol_dollar}{jetty.version}</version>			
+			<version>${symbol_dollar}{jetty.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
-			<version>${symbol_dollar}{jquery.version}</version>			
+			<version>${symbol_dollar}{jquery.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery-cookie</artifactId>
-			<version>${symbol_dollar}{jquery-cookie.version}</version>			
+			<version>${symbol_dollar}{jquery-cookie.version}</version>
 			<scope>runtime</scope>
 			<exclusions>
 				<exclusion>
@@ -208,7 +208,7 @@
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery-tmpl</artifactId>
-			<version>${symbol_dollar}{jquery-tmpl.version}</version>			
+			<version>${symbol_dollar}{jquery-tmpl.version}</version>
 			<scope>runtime</scope>
 			<exclusions>
 				<exclusion>
@@ -219,5 +219,4 @@
 			</exclusions>
 		</dependency>
 	</dependencies>
-	<description>Build off this sample executable web archive project </description>
 </project>

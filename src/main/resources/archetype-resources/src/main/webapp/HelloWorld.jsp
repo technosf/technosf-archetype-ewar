@@ -10,15 +10,13 @@
 <html>
 <head>
 <title>Hello World</title>
-<link href="favicon.ico" type="image/x-icon" rel="icon">
-<link rel="stylesheet" href="style.css">
 <script src="webjars/jquery/${jquery.version}/jquery.js" type="text/javascript"></script>
 <script src="webjars/jquery-cookie/${jquery-cookie.version}/jquery.cookie.js" type="text/javascript"></script>
 </head>
 <body>
   <div id="heading">
     <h1>Hello World</h1>
-    The date is ${myapp.helloDate}
+    In package <em>${package}</em>, the date is ${myapp.helloDate}
   </div>
 </body>
 </html>
